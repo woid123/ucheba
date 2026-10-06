@@ -1,0 +1,38 @@
+name: Проверки lab11
+
+on:
+  push:
+    paths:
+      - "isrp-lab11/**"
+      - ".github/workflows/lab11-ci.yml"
+  pull_request:
+    paths:
+      - "isrp-lab11/**"
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: isrp-lab11
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Установить зависимости
+        run: pip install -r requirements.lock.txt
+
+      - name: Проверить стиль
+        run: ruff check .
+
+      - name: Проверить уязвимости в зависимостях
+        run: |
+          pip install pip-audit
+          pip-audit -r requirements.lock.txt
+
+      - name: Запустить тесты
+        run: python -m pytest -q --cov=app --cov-report=term-missing
