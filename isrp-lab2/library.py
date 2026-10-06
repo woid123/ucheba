@@ -10,6 +10,7 @@ def find_by_author(author):
 
 
 def count_books():
+    """Возвращает число книг в библиотеке."""
     return f"В библиотеке {len(books)} книг(и)"
 
 
